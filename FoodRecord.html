@@ -13,7 +13,6 @@
 		<h1>Welcome to the Food Record</h1>
 		<table>
 				<th align="left">Breakfast</th>
-			</tr>
 			<tr>
 				<td>Serving Size</td>
 				<td>Serving Type(oz,cups,etc.)</td>
@@ -25,6 +24,15 @@
 				<td><input id="b2" type="text" /></td>
 				<td><input id="b3" type="text" /></td>
 				<td><input id="b4" type="text" /></td>
+			</tr>
+		</table>
+		<table name="water">
+			<th align="left">Water Intake</th>
+			<tr>
+				<td><input id="w" type="text" /></td>
+				<td>Total Intake: </td>
+				<td name="waterTotal">0</td>
+				<td><button onclick="updateWaterTotal()">Update</button></td>
 			</tr>
 		</table>
 		<p>Use the button below to save record, choose Microsoft print to PDF to save as file</p>
@@ -47,15 +55,31 @@
 			}
 			function clearStorage() {
 				if(confirm("Are you sure you want to clear all previously entered data?")) {
+					//clear all fields
 					let fields = document.getElementsByTagName("input");
 					for (let i=0; i<fields.length;i++) {
 						fields[i].value = "";
 					}
+					document.getElementsByName("waterTotal")[0].textContent = "0";
+
+					//clear storage
 					localStorage.clear();
 					alert("data has been deleted");
 				} else {
 					alert("data has not been deleted");
 				}
+			}
+			function updateWaterTotal() {
+				let waterField = document.getElementById("w");
+				let preValue = localStorage.getItem("w");
+				let updatedValue = Number(waterField.value) + Number(preValue);
+
+				localStorage.setItem("w",updatedValue);
+
+				let ele = document.getElementsByName("waterTotal");
+				ele[0].textContent = localStorage.getItem("w");
+
+				waterField.value = "";
 			}
 		</script>
 	</body>
