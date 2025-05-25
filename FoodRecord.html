@@ -19,20 +19,21 @@
 				<td>Food</td>
 				<td>Preperation Form(cooked,raw,etc.)</td>
 			</tr>
-			<tr>
-				<td><input id="b1" type="text" /></td>
-				<td><input id="b2" type="text" /></td>
-				<td><input id="b3" type="text" /></td>
-				<td><input id="b4" type="text" /></td>
+			<tr id="test1">
+				<td><input type="text" /></td>
+				<td><input type="text" /></td>
+				<td><input type="text" /></td>
+				<td><input type="text" /></td>
 			</tr>
 		</table>
 		<table name="water">
 			<th align="left">Water Intake</th>
 			<tr>
-				<td><input id="w" type="text" /></td>
+				<td><input type="text" /></td>
 				<td>Total Intake: </td>
 				<td name="waterTotal">0</td>
 				<td><button onclick="updateWaterTotal()">Update</button></td>
+				<td><select><option>oz</option><option>mL</option></select></td>
 			</tr>
 		</table>
 		<p>Use the button below to save record, choose Microsoft print to PDF to save as file</p>
@@ -40,19 +41,21 @@
 		<button onclick="saveChanges()">Save Changes</button>
 		<button onclick="window.print()">Download page</button>
 		<script>
+			//save changes to local storage
 			function saveChanges() {
-				let ele = document.querySelectorAll("[id]");
-				let ids = [];
-				
-				ele.forEach(element => {
-					ids.push(element.id);
-				});
-				
-				ids.forEach(id => {
-					localStorage.setItem(id,document.getElementById(id).value);
-				});
-
-			}
+				let row = document.getElementById("test1");
+				let inputs = row.getElementsByTagName("input");
+				for (let i=0; i<inputs.length; i++) {
+					//console.log(inputs[i].value);
+					if (inputs[i].value != "") {
+						localStorage.setItem("row"+i, inputs[i].value);
+					} else {
+						localStorage.setItem("row"+i, "");
+						return;
+					}
+				}
+			};
+			//clear stored data
 			function clearStorage() {
 				if(confirm("Are you sure you want to clear all previously entered data?")) {
 					//clear all fields
@@ -68,7 +71,8 @@
 				} else {
 					alert("data has not been deleted");
 				}
-			}
+			};
+			//update water intake amount
 			function updateWaterTotal() {
 				let waterField = document.getElementById("w");
 				let preValue = localStorage.getItem("w");
@@ -80,7 +84,24 @@
 				ele[0].textContent = localStorage.getItem("w");
 
 				waterField.value = "";
-			}
+			};
+			//load cached data and populate fields on page load
+			window.onload = function() {
+				// Load breakfast row inputs
+				let row = document.getElementById("test1");
+				let inputs = row.getElementsByTagName("input");
+				for (let i = 0; i < inputs.length; i++) {
+					let value = localStorage.getItem("row" + i);
+					if (value !== null) {
+						inputs[i].value = value;
+					}
+				}
+				// Load water total if present
+				let waterTotal = localStorage.getItem("w");
+				if (waterTotal !== null) {
+					document.getElementsByName("waterTotal")[0].textContent = waterTotal;
+				}
+			};
 		</script>
 	</body>
 </html>
