@@ -29,11 +29,11 @@
 		<table name="water">
 			<th align="left">Water Intake</th>
 			<tr>
-				<td><input type="text" /></td>
+				<td><input id="w" type="text" /></td>
 				<td>Total Intake: </td>
 				<td name="waterTotal">0</td>
 				<td><button onclick="updateWaterTotal()">Update</button></td>
-				<td><select><option>oz</option><option>mL</option></select></td>
+				<td><select id="waterUnit"><option value="oz">oz</option><option value="mL">mL</option></select></td>
 			</tr>
 		</table>
 		<p>Use the button below to save record, choose Microsoft print to PDF to save as file</p>
@@ -54,6 +54,9 @@
 						return;
 					}
 				}
+				//save water units
+				let waterUnit = document.getElementById("waterUnit");
+				localStorage.setItem("waterUnit", waterUnit.value);
 			};
 			//clear stored data
 			function clearStorage() {
@@ -100,6 +103,11 @@
 				let waterTotal = localStorage.getItem("w");
 				if (waterTotal !== null) {
 					document.getElementsByName("waterTotal")[0].textContent = waterTotal;
+				}
+				//load water units
+				let waterUnit = localStorage.getItem("waterUnit");
+				if (waterUnit !== null) {
+					document.getElementById("waterUnit").value = waterUnit;
 				}
 			};
 		</script>
